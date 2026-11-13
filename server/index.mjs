@@ -1,9 +1,10 @@
 import 'dotenv/config';import express from 'express';import fs from 'node:fs';import {ethers} from 'ethers';import {connect,signedPayment} from '../lib/chain.mjs';
 const c=await connect();const relayer=new ethers.NonceManager(c.session);const app=express();app.use(express.json({limit:'16kb'}));
 const port=Number(process.env.PORT||3000);const base=`http://127.0.0.1:${port}`;
-let poison=false,busy=false;const requests=new Map();const ledger=[];
+const ledgerPath=c.network==='Fuji'?'data/ledger-43113.json':null;
+let poison=false,busy=false;const requests=new Map();const ledger=ledgerPath&&fs.existsSync(ledgerPath)?JSON.parse(fs.readFileSync(ledgerPath,'utf8')):[];
 fs.mkdirSync('data',{recursive:true});
-function log(e){const row={time:new Date().toISOString(),...e};ledger.unshift(row);fs.appendFileSync('data/audit.jsonl',JSON.stringify(row)+'\n');}
+function log(e){const row={time:new Date().toISOString(),...e};ledger.unshift(row);fs.appendFileSync('data/audit.jsonl',JSON.stringify(row)+'\n');if(ledgerPath)fs.writeFileSync(ledgerPath,JSON.stringify(ledger,null,2));}
 // Loopback-only control plane; reject browser cross-origin mutations.
 app.use((req,res,next)=>{if(req.method!=='GET' && req.headers.origin && req.headers.origin!==base && req.headers.origin!==`http://localhost:${port}`)return res.sendStatus(403);next();});
 app.get('/api/state',async(req,res,next)=>{try{const p=await c.wallet.policies(c.session.address);const spent=await c.wallet.spent24h(c.session.address);res.json({network:c.network,chainId:Number((await c.provider.getNetwork()).chainId),wallet:await c.wallet.getAddress(),token:await c.token.getAddress(),session:c.session.address,vendors:c.vendors,balance:ethers.formatUnits(await c.token.balanceOf(await c.wallet.getAddress()),6),spent:ethers.formatUnits(spent,6),remaining:ethers.formatUnits(p.daily>spent?p.daily-spent:0n,6),perCall:ethers.formatUnits(p.perCall,6),daily:ethers.formatUnits(p.daily,6),expires:Number(p.expires),active:p.active,poison,busy,ownerControls:!!c.owner,ledger});}catch(e){next(e)}});

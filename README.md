@@ -49,3 +49,11 @@ This is a testnet prototype, not audited custody software. Exact rolling account
 - `test/`: real-EVM security tests
 
 Do not commit `.env`, `data/`, or private keys. An archive of this project should exclude them and `node_modules/`.
+
+## Live Fuji deployment
+
+Wallet: `0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6`
+
+Demo jUSD: `0xd55b7e35e5acF1526d252417892cbE533Dc8B41b`
+
+See `deployment/fuji-verification.json` for confirmed payment, blocked drain, revocation, and renewal transaction hashes. The session was renewed after verification, retaining 3 jUSD rolling spend. Fuji ledger persists locally across restarts.

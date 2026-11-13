@@ -1,0 +1,49 @@
+{
+  "network": "Avalanche Fuji",
+  "chainId": 43113,
+  "wallet": "0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6",
+  "token": "0xd55b7e35e5acF1526d252417892cbE533Dc8B41b",
+  "verifiedAt": "2026-11-13T19:09:40.229Z",
+  "payments": [
+    {
+      "time": "2026-11-13T19:09:09.137Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x72418179f1cfa5ca70fa608974283ff2b11a5eff1e274ee7e79f64adc18e5747"
+    },
+    {
+      "time": "2026-11-13T19:09:02.059Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x752a4b24e81c482331a6d9c5b7e1b9d5c4afba47bfc2e9364566f6ba93596ed4"
+    },
+    {
+      "time": "2026-11-13T19:08:54.604Z",
+      "status": "paid",
+      "label": "Vendor 1 API call",
+      "amount": 1,
+      "recipient": "0x179BDDFf15C49093145a96E404F0A3Eaf0b6986F",
+      "tx": "0xa68562bb84888fd577533db2251a12eab7cac52b7a40663375b1de87853d4f16"
+    }
+  ],
+  "blockedDrain": {
+    "time": "2026-11-13T19:09:16.784Z",
+    "status": "blocked",
+    "label": "Poisoned response: drain wallet",
+    "amount": 7,
+    "recipient": "0x0000000000000000000000000000000000000abc",
+    "tx": "0xcce7fa3ddfd560e46f7d9190e23cb3359ddac1222e43699e8a02dc25fa2d7171",
+    "reason": "RecipientNotAllowed"
+  },
+  "revokeTx": "0xd1532e77b3a970742aa6128c008d01c0b9e1bbd809cbf07a7290b4d27b4e306e",
+  "revokedPaymentTx": "0xd0accddc59807619555585bc470691c022df04cc163b04fceafb29f062baf62d",
+  "revokedReason": "SessionInactive",
+  "renewalTx": "0xca2ce379a906439587f296784438672fcd0c62462f22bb9f46c606661c50aa40",
+  "finalBalance": "7 jUSD",
+  "remaining24h": "2 jUSD",
+  "note": "Session renewed for use; renewal preserves rolling spend. Demo uses deterministic harness and custom HTTP 402, not live Claude or official USDC."
+}

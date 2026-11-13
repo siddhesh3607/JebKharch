@@ -1,11 +1,12 @@
-# Validation results
+# Fuji validation
 
-- Real EVM contract security test: passed.
-- Dashboard HTTP 200; vendor HTTP 402.
-- Poisoned harness: three payments, 7 jUSD balance, 2 jUSD rolling allowance.
-- Drain transaction reverted: RecipientNotAllowed.
-- Owner revoke confirmed; subsequent payments reverted: SessionInactive.
-- Fuji public RPC chain ID verified: 43113.
-- Fuji deployment not performed: funded signing keys not configured.
-- Redesigned dashboard visually checked in the in-app browser; live contract values populate correctly.
-- Live Claude not tested.
+Deployed and verified on Avalanche Fuji, chain ID 43113.
+
+- Three paid API requests: confirmed successful receipts.
+- Poisoned drain: confirmed reverted receipt, RecipientNotAllowed.
+- Owner revocation: confirmed.
+- Payment after revocation: confirmed reverted receipt, SessionInactive.
+- Session renewed for use, preserving rolling spend.
+- Final wallet balance: 7 jUSD. Rolling allowance remaining: 2 jUSD.
+- Live Claude not tested; deterministic harness used.
+- Transaction evidence: deployment/fuji-verification.json.
