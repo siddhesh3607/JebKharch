@@ -27,8 +27,14 @@ test('dashboard owner lifecycle and paid endpoint replay protection', {timeout:1
   assert.equal(done.busy,false);assert.equal(done.balance,'7.0');assert.equal(done.remaining,'2.0');assert.ok(done.ledger.some(e=>e.reason==='RecipientNotAllowed'));
   assert.equal((await post('/api/owner',{action:'grant',perCall:'1',daily:'5',hours:24,recipients:s.vendors})).status,200);
   assert.equal((await get('/api/state')).remaining,'2.0');
+  assert.equal((await post('/api/owner',{action:'prepare'})).status,200);
+  const prepared=await get('/api/state');assert.equal(prepared.balance,'10.0');assert.equal(prepared.remaining,'5.0');assert.equal(prepared.spent,'3.0');assert.equal(prepared.daily,'8.0');
   const paid=done.ledger.find(e=>e.status==='paid');
   const q=await(await fetch(base+'/vendor/1')).json();
   const replay=await fetch(base+'/vendor/1',{headers:{'x-payment-tx':paid.tx,'x-request-id':q.requestId}});assert.equal(replay.status,402);
+  await post('/api/run');
+  const kill=await post('/api/owner',{action:'revoke'});const killResult=await kill.json();assert.equal(kill.status,200,'Kill switch must work during an active run: '+JSON.stringify(killResult)+' '+output);
+  for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,250));done=await get('/api/state');if(!done.busy)break;}
+  assert.equal(done.active,false);assert.ok(done.ledger.some(e=>e.reason==='SessionInactive'));
  }finally{child.kill();}
 });

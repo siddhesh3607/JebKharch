@@ -1,7 +1,7 @@
 import 'dotenv/config';import express from 'express';import fs from 'node:fs';import {ethers} from 'ethers';import {connect,signedPayment} from '../lib/chain.mjs';
 const c=await connect();const relayer=new ethers.NonceManager(c.session);const app=express();app.use(express.json({limit:'16kb'}));
 const port=Number(process.env.PORT||3000);const base=`http://127.0.0.1:${port}`;
-const localOwner=c.owner||(process.env.ENABLE_LOCAL_TEST_OWNER==='true'&&process.env.DEPLOYER_PRIVATE_KEY?new ethers.NonceManager(new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY,c.provider)):null);
+const localOwner=c.owner?new ethers.NonceManager(c.owner):(process.env.ENABLE_LOCAL_TEST_OWNER==='true'&&process.env.DEPLOYER_PRIVATE_KEY?new ethers.NonceManager(new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY,c.provider)):null);
 if(localOwner&&c.network==='Fuji'&&(await localOwner.getAddress()).toLowerCase()!==(await c.wallet.owner()).toLowerCase())throw Error('Local owner key does not own this wallet');
 let ownerBusy=false;
 const ledgerPath=c.network==='Fuji'?'data/ledger-43113.json':null;
@@ -16,10 +16,15 @@ app.get('/api/owner-state',async(req,res,next)=>{try{res.json({owner:await c.wal
 app.post('/api/owner',async(req,res,next)=>{
  if(req.headers['x-jebkharch-control']!=='owner')return res.sendStatus(403);
  if(!localOwner)return res.status(403).json({error:'Local test owner disabled. Connect the owner browser wallet.'});
- if(ownerBusy||busy)return res.status(409).json({error:'Wait for the current transaction or agent run.'});
+ if(ownerBusy||(busy&&req.body.action!=='revoke'))return res.status(409).json({error:'Wait for the current transaction or agent run. Revocation remains available during a run.'});
  ownerBusy=true;
  try{const {action,amount,recipient,perCall,daily,hours,recipients}=req.body;const wallet=c.wallet.connect(localOwner);let tx;
- if(action==='revoke')tx=await wallet.revoke(c.session.address);
+ if(action==='prepare'){
+  const balance=await c.token.balanceOf(c.wallet.target);
+  if(balance<10000000n){const funding=await c.token.connect(localOwner).transfer(c.wallet.target,10000000n-balance);await funding.wait();log({status:'info',label:'Demo wallet topped up to 10 jUSD',tx:funding.hash});}
+  const spent=await c.wallet.spent24h(c.session.address);const block=await c.provider.getBlock('latest');
+  tx=await wallet.grantSession(c.session.address,1000000n,spent+5000000n,block.timestamp+86400,c.vendors);
+ }else if(action==='revoke')tx=await wallet.revoke(c.session.address);
  else if(action==='grant'){
   if(!Array.isArray(recipients)||!recipients.length||recipients.length>32||recipients.some(v=>!ethers.isAddress(v)))throw Error('Provide valid allowed recipients');
   const h=Number(hours);if(!Number.isFinite(h)||h<=0||h>720)throw Error('Expiry must be between 0 and 720 hours');
@@ -61,6 +66,6 @@ app.post('/api/poison',(req,res)=>{poison=!!req.body.enabled;res.json({poison});
 app.post('/api/revoke',async(req,res,next)=>{try{if(!c.owner)return res.status(400).json({error:'Use owner wallet on Fuji; backend has no owner key. See README.'});await(await c.wallet.connect(c.owner).revoke(c.session.address)).wait();log({status:'info',label:'Owner revoked session on-chain'});res.json({ok:true});}catch(e){next(e)}});
 app.get('/api/revoke-data',(req,res)=>res.json({data:c.wallet.interface.encodeFunctionData('revoke',[c.session.address])}));
 app.get('/api/config',async(req,res)=>res.json({wallet:c.wallet.target,abi:c.wallet.interface.fragments.map(f=>JSON.parse(f.format('json'))),session:c.session.address}));
-app.use(express.static('public'));app.use((e,req,res,next)=>res.status(500).json({error:e.shortMessage||e.message}));
+app.use(express.static('public'));app.use((e,req,res,next)=>res.status(500).json({error:e.revert?.name||e.info?.error?.message||e.error?.message||e.shortMessage||e.message}));
 app.listen(port,'127.0.0.1',()=>console.log(`JebKharch: ${base} — ${c.network}`));
 

@@ -1,0 +1,100 @@
+{
+  "verifiedAt": "2026-11-13T19:48:52.874Z",
+  "network": "Fuji",
+  "chainId": 43113,
+  "wallet": "0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6",
+  "paidAttackRun": [
+    {
+      "time": "2026-11-13T19:48:01.255Z",
+      "status": "blocked",
+      "label": "Poisoned response: drain wallet",
+      "amount": 7,
+      "recipient": "0x0000000000000000000000000000000000000abc",
+      "tx": "0x204bec89f86380695d3dcd3d146086aa49fe9b1ccb3111b98cba8879d63b9a05",
+      "reason": "RecipientNotAllowed"
+    },
+    {
+      "time": "2026-11-13T19:47:53.540Z",
+      "status": "info",
+      "label": "Best quote: ₹2499"
+    },
+    {
+      "time": "2026-11-13T19:47:53.504Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x582cff2361c184e36c43f73e0413c0935b6b03b6a3a37f297e2a0dcba6175f3c"
+    },
+    {
+      "time": "2026-11-13T19:47:46.748Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0xdf8215c7a39b8df8f0752f2c405bca16e5790594c461839cdb56d945b7cbf562"
+    },
+    {
+      "time": "2026-11-13T19:47:40.614Z",
+      "status": "paid",
+      "label": "Vendor 1 API call",
+      "amount": 1,
+      "recipient": "0x179BDDFf15C49093145a96E404F0A3Eaf0b6986F",
+      "tx": "0x171d18405fb175f529c4f1be67d399a7f0248f9b99fd1d0ad7f5fe695f7c0863"
+    },
+    {
+      "time": "2026-11-13T19:47:34.220Z",
+      "status": "info",
+      "label": "Deterministic attack harness started (not an LLM)"
+    }
+  ],
+  "revokeTx": "0x67490bc1759482b27dbb82f0d3269de5dd4806d454900921a2a4ffcb4750a6cb",
+  "revokedRun": [
+    {
+      "time": "2026-11-13T19:48:37.940Z",
+      "status": "info",
+      "label": "No quotes purchased. Check session, budget, allowlist and wallet balance."
+    },
+    {
+      "time": "2026-11-13T19:48:37.938Z",
+      "status": "blocked",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x611a75abd534e26a3eb23dbfe68f98d588cdf3930dc8b75f749cec226eeb5188",
+      "reason": "SessionInactive"
+    },
+    {
+      "time": "2026-11-13T19:48:26.555Z",
+      "status": "blocked",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0xbfd40df780d4d2ea5b4c9c66e08ae03bd569b926b1b77e5436e59109e5e5e3e3",
+      "reason": "SessionInactive"
+    },
+    {
+      "time": "2026-11-13T19:48:19.326Z",
+      "status": "blocked",
+      "label": "Vendor 1 API call",
+      "amount": 1,
+      "recipient": "0x179BDDFf15C49093145a96E404F0A3Eaf0b6986F",
+      "tx": "0x001d90119dcb055f9431e4b562edd314b5560731be846555f6afc1df0eea02bc",
+      "reason": "SessionInactive"
+    },
+    {
+      "time": "2026-11-13T19:48:08.587Z",
+      "status": "info",
+      "label": "Deterministic attack harness started (not an LLM)"
+    }
+  ],
+  "preparedTx": "0x507cb28bc49a8a8aac2b9e6813262533ccf6234c22537e88890cb60017fa8586",
+  "ready": {
+    "balance": "10.0",
+    "remaining": "5.0",
+    "spent": "11.0",
+    "daily": "16.0",
+    "active": true,
+    "expires": 1794685725
+  }
+}

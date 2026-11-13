@@ -33,6 +33,8 @@ Local owner controls require `ENABLE_LOCAL_TEST_OWNER=true` and `DEPLOYER_PRIVAT
 
 ## Demo
 
+For the guided presentation, read `DEMO.md`. Before each run, click **Prepare Next Demo** in Owner Desk. It tops up to 10 jUSD and grants 5 jUSD of remaining allowance by increasing the total cap to include previous rolling spend.
+
 1. Check session expiry, token balance, gas, and remaining rolling budget. Renew/fund through Owner Desk if needed.
 2. Enable **Unleash the Poison**.
 3. Launch the **Attack harness**. It buys three vendor calls for 1 jUSD each.
@@ -77,3 +79,7 @@ Reverted transactions cannot retain events. Blocked attempts are local audit rec
 - `deployment/`: public Fuji evidence; no private keys
 
 Never publish `.env`, `node_modules`, or runtime key files.
+
+## Portable demo launchers
+
+`Start-JebKharch.cmd` uses the configured network. `Start-Local-Demo.cmd` always starts a new local EVM with fresh test funds; no keys or faucet needed. `node scripts/demo-smoke.mjs` runs the real payment/attack/revoke sequence against an already running local-owner-enabled server and restores a ready state. It uses testnet transactions when the server is configured for Fuji.
