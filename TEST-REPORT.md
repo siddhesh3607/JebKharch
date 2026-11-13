@@ -1,38 +1,35 @@
-# JebKharch test report
+# Completion and validation report
 
-Tested: 14/11/2026, 1:37:08 am IST
+Verified 14/11/2026, 1:47:46 am IST.
 
-## Results
+## Finished in this pass
 
-| Check | Result |
-| --- | --- |
-| npm test | PASS: 2 automated tests with multiple contract/API assertions; 0 failures |
-| Signature integrity and nonce replay | PASS |
-| Recipient allowlist and per-call limit | PASS |
-| Rolling cap, expiry and budget preservation | PASS |
-| Owner access, funding and withdrawal | PASS |
-| Revocation during an active local mission | PASS |
-| Prepare Next Demo | PASS: balance restored, renewed session, spend preserved |
-| HTTP 402 and unmatched receipt rejection | PASS |
-| Cross-origin and missing control-header rejection | PASS |
-| Live Fuji three-call mission | PASS: three confirmed payments |
-| Live Fuji poisoned drain | PASS: reverted RecipientNotAllowed |
-| Live Fuji revocation | PASS: subsequent payments reverted SessionInactive |
-| Independent receipt verification | PASS: 12 Fuji receipts matched expected status; wallet bytecode present |
-| Dashboard | PASS: wallet connection feedback, owner mode, live values, ledger, header/footer |
-| Browser console | No errors observed |
-| Horizontal overflow | None observed at tested viewport |
+- Restart-safe, wallet-scoped HTTP 402 quote journal with one-use redemption, TTL and capacity limit.
+- Extracted Claude runner with input validation, bounded turns, request timeout, error tool results and controlled-response tests.
+- Verified external owner transaction import with duplicate suppression.
+- Instant ledger filters, empty states, JSON receipt export.
+- Startup diagnostics (npm run doctor), session-key/deployment checks and a GitHub CI workflow.
+- Request validation and explicit rejection of unavailable Claude mode or browser signing against local EVM addresses.
+- Submission notes and a 90-second demo script.
 
-## Ready state after testing
+## Tests
+
+10 automated tests passed with 0 failures: contract security, full API owner lifecycle, mid-run revoke, Claude paid-tool handling, constrained transfer handling, invalid tool inputs, model errors/turn bounds, Fuji switch/add flow, wallet rejection, and persisted quote replay/expiry. Changed isolated agent/provider/quote tests were also rerun successfully after final refinements.
+
+A fresh real Fuji mission confirmed three payments, a reverted drain (RecipientNotAllowed), owner revocation, revoked-key reverts (SessionInactive), and restoration. Public evidence: deployment/demo-ready.json.
+
+Receipt import and JSON export were tested against a real confirmed owner transaction; evidence: deployment/export-check.json.
+
+Browser QA confirmed instant blocked-attempt filtering and export controls; no console errors observed. The header network badge remains removed and the footer reads Built for Avalanche.
+
+## Ready state
 
 Wallet: 0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6
 
-Balance: 10.0 jUSD. Available rolling allowance: 5.0 jUSD. Session active. Total rolling cap: 19.0 jUSD, including 14.0 jUSD already spent.
+Balance 10.0 jUSD; allowance 5.0 jUSD; active session. Total rolling cap 22.0 jUSD includes 17.0 jUSD of earlier spend, preserved by design.
 
-## Verification limits
+## User-dependent setup
 
-The in-app browser has no injected wallet extension, so actual MetaMask/Core connection and browser-wallet transaction signing were not exercised. Missing-provider guidance was verified. Local test-owner signing was used for confirmed Fuji owner operations. Live Claude was not exercised because API credentials are absent. Tests use the deterministic harness and demo jUSD with the custom HTTP 402 protocol. This is functional testing, not a contract security audit.
+Live Claude needs ANTHROPIC_API_KEY and CLAUDE_MODEL in the local private .env. The tool loop has controlled-response coverage; an authenticated live call was not made. Actual browser-extension signing needs MetaMask/Core in Chrome/Edge; provider behavior was tested with simulated responses and the local Fuji owner was used for chain transactions. CI is configured but has not been executed by a remote GitHub runner.
 
-## Evidence
-
-See deployment/demo-ready.json for the latest mission, reverted transactions, owner revocation, and restoration hashes. See deployment/latest-receipt-check.json for independently fetched receipt status and block numbers.
+This is a functional testnet prototype with demo jUSD, custom HTTP 402 and a single-process quote journal. It is not independently audited custody software.

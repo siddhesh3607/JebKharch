@@ -8,7 +8,9 @@
     "demo": "node server/index.mjs",
     "start": "node server/index.mjs",
     "deploy:fuji": "node scripts/deploy.mjs",
-    "demo:local": "node scripts/local.mjs"
+    "demo:local": "node scripts/local.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "demo:verify": "node scripts/demo-smoke.mjs"
   },
   "dependencies": {
     "ethers": "6.15.0",
