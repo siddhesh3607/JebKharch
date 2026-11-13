@@ -7,4 +7,5 @@
 - Owner revoke confirmed; subsequent payments reverted: SessionInactive.
 - Fuji public RPC chain ID verified: 43113.
 - Fuji deployment not performed: funded signing keys not configured.
-- Live Claude and browser visual rendering not tested.
+- Redesigned dashboard visually checked in the in-app browser; live contract values populate correctly.
+- Live Claude not tested.
