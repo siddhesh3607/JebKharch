@@ -1,0 +1,62 @@
+{
+  "chainId": 43113,
+  "wallet": "0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6",
+  "checkedAt": "2026-11-13T19:33:34.354Z",
+  "transactions": {
+    "fund": "0x79f9a2210a3c65961756fc0977bf36f3afb54c567d0524c8c16e9175d0947a35",
+    "withdraw": "0x8b1bef4a6d12546cce9830fe4a0e17898c06240c3fcc1064f57a6c71a14766ab",
+    "revoke": "0x196d09ad5e1f0903b00227ef4a9370714ea73559bd3f0f2b92750df02f6af645",
+    "renew": "0x16d48f4c49e1951287090dadd1d768a02241d64d7fe716ca4daf332f2ebedc80"
+  },
+  "finalState": {
+    "balance": "6.0",
+    "daily": "10.0",
+    "remaining": "2.0",
+    "active": true
+  },
+  "latestRun": [
+    {
+      "time": "2026-11-13T19:34:40.239Z",
+      "status": "blocked",
+      "label": "Poisoned response: drain wallet",
+      "amount": 6,
+      "recipient": "0x0000000000000000000000000000000000000abc",
+      "tx": "0x7aa0244e5d4f59b388909baf24f37d86ab7e9d40eade03eb926853b866b93cdf",
+      "reason": "RecipientNotAllowed"
+    },
+    {
+      "time": "2026-11-13T19:34:29.349Z",
+      "status": "info",
+      "label": "Best quote: ₹2499"
+    },
+    {
+      "time": "2026-11-13T19:34:29.172Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x706776939576eff1b565a560bd11b8eaa3508048a58737756a9effbd8cebb282"
+    },
+    {
+      "time": "2026-11-13T19:34:22.795Z",
+      "status": "paid",
+      "label": "Vendor 2 API call",
+      "amount": 1,
+      "recipient": "0x34787d6b12d704be1076f3ceA27762066d210ae7",
+      "tx": "0x1481f72b1da99d7d4eaf910948d434e79f37f301c494e953b89f0082cd0cd1b4"
+    },
+    {
+      "time": "2026-11-13T19:34:16.304Z",
+      "status": "paid",
+      "label": "Vendor 1 API call",
+      "amount": 1,
+      "recipient": "0x179BDDFf15C49093145a96E404F0A3Eaf0b6986F",
+      "tx": "0xc05dcab4c0b1bc33ed20141e56eb29471e517c21ff88eb2923a50c2bf6a9c67e"
+    },
+    {
+      "time": "2026-11-13T19:34:05.103Z",
+      "status": "info",
+      "label": "Deterministic attack harness started (not an LLM)"
+    }
+  ]
+}

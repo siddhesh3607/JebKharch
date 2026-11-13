@@ -1,10 +1,10 @@
-# JebKharch
+# JebKharch — pocket money for AI agents
 
-Pocket money for AI agents. A complete local EVM demo plus Avalanche Fuji deployment scripts. All project code lives in this folder.
+A working Avalanche Fuji prototype: Solidity session wallet, paid HTTP APIs, deterministic attack harness, optional live Claude agent, and an owner dashboard.
 
-## Run on Windows
+## Run
 
-Install Node.js 20+ (22 LTS recommended), then open PowerShell in this folder:
+Requires Node.js 20+ (22 recommended).
 
 ```powershell
 npm.cmd install
@@ -12,48 +12,68 @@ npm.cmd test
 npm.cmd run demo
 ```
 
-Open http://127.0.0.1:3000. Local mode deploys fresh contracts on an in-process Ganache EVM, funds the wallet with 10 **jUSD** (a demo ERC-20, not official USDC), grants a 1-token per-call / 5-token rolling-day session, and funds session gas automatically. Restart resets the local chain. Audit history is appended to `data/audit.jsonl`; the dashboard shows the current process's attempts.
+Open http://127.0.0.1:3000. With no `.env`, the app runs a fresh local EVM demo. On the original Desktop checkout, `.env` is configured for the deployed Fuji contracts. The download deliberately excludes private keys and local runtime data.
 
-Enable **Poison vendor response**, then run the deterministic harness. Three real payments leave 7 tokens in the wallet and 2 in the rolling budget. The drain transaction reverts with `RecipientNotAllowed`. Revoke, then run again: payments fail with `SessionInactive`. Start a fresh local process to repeat from the initial balance.
+## Connect a wallet
 
-The deterministic harness deliberately follows malicious vendor instructions; it is clearly labeled and is not evidence that Claude was compromised. Live Claude uses actual tool calls and may refuse the injection. Select that mode after configuring `ANTHROPIC_API_KEY` and `CLAUDE_MODEL` in `.env`. No keys or signatures are sent to the model. Tool execution is limited to eight model turns.
+The purple **Connect Wallet** button requests access to a browser wallet, switches to Fuji, and offers to add Fuji if missing. Account and network changes update the status. The browser's selected account must own the smart contract to change policy, revoke or withdraw. Any funded account can deposit the demo token or top up session gas.
 
-## Deploy and run on Avalanche Fuji
+Use Chrome/Edge with MetaMask or Core. The Codex preview may not have an injected wallet extension; it displays instructions instead of pretending to connect.
 
-1. Copy `.env.example` to `.env`. Keep it private.
-2. Create separate disposable testnet owner and session keys using a wallet. Put them in `DEPLOYER_PRIVATE_KEY` and `SESSION_PRIVATE_KEY`. Put two recipient addresses in `VENDOR_A` and `VENDOR_B`.
-3. Fund the deployer AND session addresses with test AVAX using the Avalanche faucet. Session AVAX pays gas and is outside token policy; do not fund it with valuable assets.
-4. Run `npm.cmd run deploy:fuji`. It checks chain ID 43113, deploys demo jUSD and AgentWallet, funds 10 jUSD, and grants a 24-hour session. Addresses are saved in `data/fuji.json`.
-5. Remove `DEPLOYER_PRIVATE_KEY` from the runtime `.env` after deployment. Set `NETWORK=fuji` and run `npm.cmd start`. The server needs only the session key. Never give the owner key to the agent.
-6. Use a browser wallet holding the contract owner on Fuji for the dashboard revoke button. The wallet extension is prompted to submit the owner transaction. The ledger links to Avalanche's Fuji explorer.
+## Owner Desk
 
-RPC: https://api.avax-test.network/ext/bc/C/rpc · chain ID 43113. Fuji execution requires funded keys; this repository does not claim deployment without an actual recorded transaction. No official USDC or facilitator dependency is implied.
+Under **House Rules**, choose the signer:
 
-## Protocol and boundaries
+- **Connected browser wallet**: transactions are signed by the owner in the wallet extension. Non-owner accounts cannot change policy or withdraw.
+- **Local test owner / this computer**: available in the original Fuji checkout for this testnet demo, or automatically on the local EVM. The server signs owner actions using the locally configured test owner. This is a demo convenience and is not a noncustodial production arrangement. Agent tools do not expose owner actions. Browser connection and local signing are separate modes.
 
-`AgentWallet.sol` is also the policy module: immutable token, human owner, generation-scoped recipient allowlist, EIP-712 chain/contract-bound signatures, sequential nonce, expiry, per-call cap, exact rolling 24-hour spend, revoke and owner withdrawal. There is no arbitrary-call entry point or approval function: session keys can only invoke the wallet's token transfer path. Regrant invalidates old signatures and recipients without resetting rolling history. A session key cannot access the owner withdrawal method.
+Controls include per-call and rolling 24h caps, recipient allowlist, expiry, session renewal, deposit, withdrawal, agent gas top-up, and revocation. Every action waits for an actual receipt. Transaction hashes appear in the ledger. Regranting preserves previous rolling spend; it does not reset the daily counter. If the budget is exhausted, the owner must raise the cap or wait for spend to age out.
 
-The paid endpoints implement a **custom HTTP 402 flow, not the x402 specification**. `GET /vendor/0` or `/vendor/1` returns a five-minute quote and random request ID. The agent signs and submits payment, then retries with `X-Payment-Tx` and `X-Request-Id`. The endpoint checks a successful receipt from the expected wallet and matching session, recipient, amount and request ID. A quote can be redeemed once. Quotes are in-memory and do not survive restarts; old receipts cannot authorize new quotes.
+Local owner controls require `ENABLE_LOCAL_TEST_OWNER=true` and `DEPLOYER_PRIVATE_KEY` in the private `.env`. They bind to loopback, validate Host/Origin, and require a custom control header. Do not expose the server publicly. Disable local owner mode and remove the deployer key from runtime configuration when using browser-only ownership.
 
-Reverted transactions cannot retain Solidity events. Blocked attempts are local audit records, with a reverted transaction hash if submission succeeded. They are not a censorship-proof on-chain rejection index. Successful payments emit `Paid`. The dashboard polls actual contract state.
+## Demo
 
-This is a testnet prototype, not audited custody software. Exact rolling accounting scans active payments and can become expensive at high volume. The server control plane binds only to loopback; do not expose it publicly without authentication and durable, transactional quote storage. Fuji owner policy updates can be submitted through the ABI in `artifacts/contracts.json` using the owner wallet; runtime does not retain owner access. Deployment uses a demo token to avoid pretending arbitrary test tokens are USDC.
+1. Check session expiry, token balance, gas, and remaining rolling budget. Renew/fund through Owner Desk if needed.
+2. Enable **Unleash the Poison**.
+3. Launch the **Attack harness**. It buys three vendor calls for 1 jUSD each.
+4. The poisoned response requests a drain to an unapproved address. The harness attempts it; the real contract reverts with `RecipientNotAllowed`.
+5. **Pull the Plug** revokes the session. Further attempts revert with `SessionInactive`.
+6. Use **Save Policy / Renew** to reactivate the session. Existing spend remains counted.
 
-## Files
+The harness deliberately follows the malicious response and is not an LLM. Live Claude uses real tool calls and may refuse malicious instructions. Configure `ANTHROPIC_API_KEY` and `CLAUDE_MODEL` locally to enable that mode; it is disabled until configured. Private keys are never passed to Claude. Live Claude has not been tested with a real API key in this session.
 
-- `contracts/`: wallet and demo token
-- `lib/`: chain setup and typed payment signing
-- `server/`: paid APIs, agent, dashboard backend
-- `public/`: responsive owner dashboard
-- `scripts/`: compiler and Fuji deployment
-- `test/`: real-EVM security tests
-
-Do not commit `.env`, `data/`, or private keys. An archive of this project should exclude them and `node_modules/`.
-
-## Live Fuji deployment
+## Fuji deployment
 
 Wallet: `0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6`
 
-Demo jUSD: `0xd55b7e35e5acF1526d252417892cbE533Dc8B41b`
+Demo token: `0xd55b7e35e5acF1526d252417892cbE533Dc8B41b`
 
-See `deployment/fuji-verification.json` for confirmed payment, blocked drain, revocation, and renewal transaction hashes. The session was renewed after verification, retaining 3 jUSD rolling spend. Fuji ledger persists locally across restarts.
+Chain ID: 43113. RPC: https://api.avax-test.network/ext/bc/C/rpc
+
+Recorded public addresses and successful/reverted transaction hashes are in `deployment/`. Runtime private keys remain in `.env`, excluded by Git and the downloadable archive. This token is **jUSD, not official USDC**.
+
+To deploy independently, copy `.env.example` to `.env`, configure separate disposable owner/session keys and two vendor addresses, fund the owner with at least 0.1 Fuji test AVAX, and run `npm.cmd run deploy:fuji`. Deployment tops up session gas and saves `data/fuji.json`. Set `NETWORK=fuji` and run `npm.cmd start`. If using the existing public deployment, another owner account cannot control it; deploy your own wallet or use the original checkout's test owner.
+
+## How it works
+
+`AgentWallet.sol` combines the wallet and policy module. Only ERC-20 transfers of one immutable asset are exposed to sessions. EIP-712 signatures bind the chain, contract, session generation, recipient, amount, nonce, and API request ID. The contract enforces expiry, nonce, recipient allowlist, per-call cap, exact rolling 24h spend and revocation. Owner withdrawal remains owner-only. Renewal invalidates old-generation signatures and allowlist entries without erasing spend.
+
+Vendors implement a **custom HTTP 402 protocol, not x402 specification compatibility**. Each quote expires in five minutes and has a unique request ID. After payment, the agent supplies the transaction hash and request ID. The vendor checks the successful wallet `Paid` event and matches session, recipient, amount and ID. Quotes redeem once and are stored in memory; restarting invalidates them.
+
+Reverted transactions cannot retain events. Blocked attempts are local audit records with on-chain reverted receipts when submitted. Fuji ledger history persists locally across restarts. Exact rolling accounting scans active payments and is intended for this small testnet demo, not high-throughput custody. Contracts are not audited.
+
+## Validation
+
+`npm.cmd test` runs actual EVM tests covering signatures, replay, caps, rolling expiry, revocation, owner access, deposits, withdrawals, renewal, API receipt matching, and cross-origin control rejection. Browser layout and missing-extension feedback were checked. Actual Fuji payment, poisoned-drain, revoke, renewal, funding and withdrawal receipts are recorded in `deployment/`.
+
+## Layout
+
+- `contracts/`: wallet and demo ERC-20
+- `server/`: API service, owner controls and agent
+- `public/`: dashboard and wallet provider integration
+- `lib/`: chain setup and EIP-712 signing
+- `scripts/`: compile, deploy and verification helpers
+- `test/`: contract and API lifecycle tests
+- `deployment/`: public Fuji evidence; no private keys
+
+Never publish `.env`, `node_modules`, or runtime key files.
