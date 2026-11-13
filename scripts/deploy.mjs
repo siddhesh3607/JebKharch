@@ -1,0 +1,10 @@
+import 'dotenv/config';import fs from 'node:fs';import {ethers} from 'ethers';import {deploy} from '../lib/chain.mjs';
+if(!process.env.DEPLOYER_PRIVATE_KEY||!process.env.SESSION_PRIVATE_KEY)throw Error('Set DEPLOYER_PRIVATE_KEY and SESSION_PRIVATE_KEY locally in .env. Never share them in chat.');
+const provider=new ethers.JsonRpcProvider(process.env.FUJI_RPC_URL||'https://api.avax-test.network/ext/bc/C/rpc');
+if((await provider.getNetwork()).chainId!==43113n)throw Error('Refusing deployment outside Fuji');
+const owner=new ethers.NonceManager(new ethers.Wallet(process.env.DEPLOYER_PRIVATE_KEY,provider));
+const session=new ethers.Wallet(process.env.SESSION_PRIVATE_KEY,provider);
+const vendors=[process.env.VENDOR_A,process.env.VENDOR_B];if(vendors.some(x=>!ethers.isAddress(x)))throw Error('Set VENDOR_A and VENDOR_B addresses');
+const {wallet,token}=await deploy(provider,owner,session,vendors);
+fs.mkdirSync('data',{recursive:true});const d={chainId:43113,wallet:await wallet.getAddress(),token:await token.getAddress(),session:session.address,vendors,deployedAt:new Date().toISOString()};
+fs.writeFileSync('data/fuji.json',JSON.stringify(d,null,2));console.log(d);console.log('Demo jUSD deployed, not official USDC. Fund session with test AVAX for gas. Start with NETWORK=fuji.');
