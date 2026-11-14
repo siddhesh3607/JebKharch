@@ -10,7 +10,7 @@ test('Vercel browser workflow deploys owned contracts, buys paid data, blocks dr
  const outsider=new ethers.Wallet(keys[1].secretKey,provider);await assert.rejects(demo.revoke(outsider),/owner account/);
  await demo.revoke(owner);const blocked=await demo.pay(VENDORS[0],1000000n,ethers.hexlify(ethers.randomBytes(32)),'Revoked request');assert.equal(blocked.reason,'SessionInactive');await demo.prepare(owner);s=await demo.snapshot();assert.equal(s.balance,'10.0');assert.equal(s.remaining,'5.0');assert.equal(s.spent,'3.0');
  await demo.withdraw(owner,ownerAddress,'1');assert.equal((await demo.snapshot()).balance,'9.0');await demo.fund(owner,'1');assert.equal((await demo.snapshot()).balance,'10.0');
- const oldSession=demo.meta.session;const recovered=new BrowserDemo({ethers,provider,config,meta:demo.meta});await recovered.prepare(owner);assert.notEqual(recovered.meta.session,oldSession);assert.equal((await recovered.snapshot()).active,true);
+ const oldSession=demo.meta.session;const recovered=new BrowserDemo({ethers,provider,config,meta:demo.meta});await recovered.prepare(owner);assert.notEqual(recovered.meta.session,oldSession);assert.equal((await recovered.snapshot()).active,true);assert.equal((await demo.wallet().policies(oldSession)).active,false,'Replacing a lost tab session must revoke the previous key');
  const same=new BrowserDemo({ethers,provider,config,meta:demo.meta});same.setKey(demo.session.privateKey);assert.equal(same.meta.session,oldSession);
  }finally{await rpc.disconnect();}
 });

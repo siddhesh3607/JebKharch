@@ -6,7 +6,7 @@ export class BrowserDemo {
  event(row){const e={time:new Date().toISOString(),...row};this.onEvent(e);return e;}
  save(){this.onSave({...this.meta},this.session?.privateKey);}
  setKey(key){if(!key)return;const session=new this.E.Wallet(key,this.provider);if(this.meta.session&&session.address.toLowerCase()!==this.meta.session.toLowerCase())throw Error('Saved session key does not match this wallet');this.session=session;this.relayer=new this.E.NonceManager(session);}
- ensureKey(){if(!this.session){const generated=this.E.Wallet.createRandom();this.meta.session=generated.address;this.setKey(generated.privateKey);this.save();}}
+ async ensureKey(signer){if(!this.session){if(this.meta.session&&(await this.wallet().policies(this.meta.session)).active)await this.confirm(await this.wallet(signer).revoke(this.meta.session),'Previous session revoked before key rotation');const generated=this.E.Wallet.createRandom();this.meta.session=generated.address;this.setKey(generated.privateKey);this.save();}}
  async ensureChain(){if(Number((await this.provider.getNetwork()).chainId)!==this.config.chainId)throw Error('Wrong chain. Use Avalanche Fuji.');}
  async confirm(tx,label){await tx.wait();this.event({status:'info',label,tx:tx.hash});return tx.hash;}
  async requireOwner(signer){await this.ensureChain();if(Number((await signer.provider.getNetwork()).chainId)!==this.config.chainId)throw Error('Switch the signing wallet to Fuji.');if((await signer.getAddress()).toLowerCase()!==(await this.wallet().owner()).toLowerCase())throw Error('Connect the owner account for this wallet.');if((await this.wallet().asset()).toLowerCase()!==this.meta.token.toLowerCase())throw Error('Saved token does not match this policy wallet.');}
@@ -20,10 +20,10 @@ export class BrowserDemo {
  async grant(signer,{perCall,daily,hours,recipients}){
   await this.requireOwner(signer);if(!Array.isArray(recipients)||!recipients.length||recipients.length>32||recipients.some(v=>!this.E.isAddress(v)||v===this.E.ZeroAddress))throw Error('Provide 1–32 valid recipients.');
   const per=this.E.parseUnits(String(perCall),6),cap=this.E.parseUnits(String(daily),6),duration=Number(hours);if(per<=0n||cap<per||!Number.isFinite(duration)||duration<=0||duration>720)throw Error('Use a positive per-call cap, a larger daily cap, and an expiry up to 720 hours.');
-  this.ensureKey();const block=await this.provider.getBlock('latest');return this.confirm(await this.wallet(signer).grantSession(this.meta.session,per,cap,block.timestamp+Math.ceil(duration*3600),recipients),'Session policy confirmed');
+  await this.ensureKey(signer);const block=await this.provider.getBlock('latest');return this.confirm(await this.wallet(signer).grantSession(this.meta.session,per,cap,block.timestamp+Math.ceil(duration*3600),recipients),'Session policy confirmed');
  }
  async prepare(signer,progress=()=>{}){
-  await this.requireOwner(signer);this.meta.owner=await signer.getAddress();this.meta.reference=false;this.ensureKey();const balance=await this.token().balanceOf(this.meta.wallet);
+  await this.requireOwner(signer);this.meta.owner=await signer.getAddress();this.meta.reference=false;await this.ensureKey(signer);const balance=await this.token().balanceOf(this.meta.wallet);
   if(balance<10000000n){progress('Deposit demo tokens. Confirm in your wallet.');await this.confirm(await this.token(signer).transfer(this.meta.wallet,10000000n-balance),'Demo wallet funded to 10 jUSD');}
   if(await this.provider.getBalance(this.meta.session)<this.E.parseEther('0.0005')){progress('Fund the limited session with 0.002 test AVAX for gas.');await this.confirm(await signer.sendTransaction({to:this.meta.session,value:this.E.parseEther('0.002')}),'Session gas funded');}
   const spent=await this.wallet().spent24h(this.meta.session);progress('Grant 1 jUSD per call, 5 jUSD available allowance, 24-hour expiry.');return this.grant(signer,{perCall:'1',daily:this.E.formatUnits(spent+5000000n,6),hours:24,recipients:this.config.vendors});

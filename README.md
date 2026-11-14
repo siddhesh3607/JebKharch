@@ -26,7 +26,7 @@ To make live payments:
 5. **Pull the Plug** revokes the session on-chain, including while a mission is running. Subsequent payments revert with `SessionInactive`.
 6. **Prepare Next Demo** tops up to 10 jUSD and grants 5 jUSD of available rolling allowance. The total cap includes previous spend for that session. Policy changes, deposits, withdrawal and session gas top-up are all available under Owner Desk.
 
-Owner keys stay in your wallet extension. A separate, limited **testnet session key** stays in this browser tab's sessionStorage; it is never uploaded to the server. Public contract metadata and audit rows are kept in localStorage. Clearing/closing browser session data can lose the session key; the owner can authorize a new session from Owner Desk. Only the owning account can grant policies, withdraw, or revoke.
+Owner keys stay in your wallet extension. A separate, limited **testnet session key** stays in this browser tab's sessionStorage; it is never uploaded to the server. Public contract metadata and audit rows are kept in localStorage. Clearing/closing browser session data can lose the session key; the owner can authorize a new session from Owner Desk. Renewal without the old key first requests revocation of the previous active session, then grants a replacement. Only the owning account can grant policies, withdraw, or revoke.
 
 The app is a policy/security demo, **not an LLM**. There is no local model, hosted inference subscription or AI API key. Vendor responses are mock price data; real transfers and reverts happen on Fuji. jUSD is a demo token, not official USDC.
 

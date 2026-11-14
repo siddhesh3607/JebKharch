@@ -1,16 +1,42 @@
-# Vercel migration validation
+# Full test report — Vercel edition
 
-Checked 14/11/2026, 11:11:36 pm IST.
+Checked 14/11/2026, 11:33:08 pm IST.
 
-- npm run build: PASS. Static dist output, browser ethers and contract bytecode are generated with no runtime model or signing secrets.
-- npm test: PASS, 7 tests, 0 failures. Contract policy security, complete browser-controller lifecycle, wallet-provider switching/rejection, stateless vendor receipt/tamper/expiry/idempotency, and health handler.
-- npm run doctor: PASS. Node 22 and Vercel build/output settings are consistent.
-- Real Fuji verification: new owned demo wallet 0x937AAC76a3f0b254fdABC852fC09c7882469cca1; three paid vendor responses, RecipientNotAllowed drain revert, owner revoke, SessionInactive payment revert. All submitted receipt statuses were independently checked. Evidence: deployment/vercel-fuji-verification.json.
-- Local Vercel-style HTTP checks: homepage, config.json, browser ethers, logo, manifest and health endpoint returned HTTP 200.
-- Browser QA: reference state loaded, six verified proof rows visible, new onboarding present, local AI and server-owner modes absent, logo loaded, no console errors observed.
+## Results
 
-## Deployment boundaries
+| Test area | Result |
+| --- | --- |
+| Automated contract/controller/API/provider suite | PASS: 12 tests, 0 failures after fixes |
+| Production build | PASS: npm run build |
+| Vercel diagnostics | PASS: npm run doctor |
+| HTTP smoke/security checks | PASS: 17 routes/status checks, including private-file/traversal rejection and removed owner API |
+| Real Fuji workflow | PASS: new wallet creation, three paid API calls, drain revert, revoke, revoked-key revert |
+| Receipt checks | PASS: 11 recorded Fuji receipts reverified; fresh run evidence also recorded |
+| Browser filtering/export | PASS: reference filtering, valid JSON download with no privateKey field |
+| Browser wallet fallback | PASS: actionable missing-extension message |
+| Responsive layout | PASS: no horizontal overflow at 390px and 1440px; logo loaded |
+| Browser console | No errors observed during browser checks |
+| Production dependency audit | PASS: 0 reported vulnerabilities |
 
-The serverless endpoints and exact browser transaction controller were exercised against Fuji using a local disposable test signer. Actual MetaMask/Core consent UI was not automated. Vercel account deployment has not been performed; import the public repository and use the included vercel.json defaults. External RPC uptime, wallet extension availability and Fuji test AVAX are required for live use. No environment variables are mandatory and no private keys belong on Vercel.
+## Issues fixed
 
-The current source and build exclude the local model and its code. An ignored legacy runtime directory may remain in the developer checkout; it is excluded by Git and .vercelignore and is never loaded.
+1. Replacing a lost browser-tab session previously left the old key active. Renewal now revokes the old active session before granting a replacement. A regression test confirms revocation.
+2. Upgraded ethers from 6.15.0 to 6.17.0 to remove the flagged production ethers/ws advisories.
+3. Updated the compiler to solc 0.8.38 and pinned its tmp dependency to 0.2.7.
+4. Contract test fixtures explicitly select an isolated local network, so tests cannot accidentally use a configured Fuji wallet.
+
+## Covered security cases
+
+Recipient allowlist; per-call and rolling caps; expiry; nonce replay; signature tampering; chain/contract domain separation; old-signature invalidation after policy renewal; non-owner rejection; failed-transfer rollback of nonce/spend; matching Paid and Transfer events; wrong amount/token/wallet/recipient rejection; reverted receipts; quote tampering/expiry; idempotent paid-quote redemption; malformed requests; RPC outage handling; browser provider rejection and network addition.
+
+## Remaining dependency advisory scope
+
+The full development dependency audit flags 7 packages (1 critical, 5 high, 1 moderate), all in the Ganache development/test dependency tree: @trufflesuite/uws-js-unofficial, bn.js, elliptic, ganache, lodash, secp256k1, ws. They are not imported by or deployed with the Vercel API runtime. This report does not claim the full development dependency tree is advisory-free.
+
+## Evidence and limits
+
+Fresh Fuji controller smoke wallet: 0x7e434b072964f6ecc491B12943E0581B57F8aFd9. See deployment/vercel-fuji-verification.json for transaction hashes. The exact controller used on the website was exercised using a local disposable test signer; actual MetaMask/Core permission and signing dialogs were not automated.
+
+GitHub CI runs the tests and build on Ubuntu; current status is at https://github.com/siddhesh3607/JebKharch/actions/workflows/test.yml.
+
+No Vercel deployment URL was found in this repository's deployment records. The production build and Vercel-style handlers were tested locally; actual hosted Vercel behavior still needs a deployed URL. External RPC availability and test AVAX remain necessary. This is functional/security regression testing, not an independent smart-contract audit.
