@@ -1,35 +1,42 @@
-# Completion and validation report
+# JebKharch — Full test report
 
-Verified 14/11/2026, 1:47:46 am IST.
+Checked 14/11/2026, 11:33:08 pm IST.
 
-## Finished in this pass
+## Results
 
-- Restart-safe, wallet-scoped HTTP 402 quote journal with one-use redemption, TTL and capacity limit.
-- Extracted Claude runner with input validation, bounded turns, request timeout, error tool results and controlled-response tests.
-- Verified external owner transaction import with duplicate suppression.
-- Instant ledger filters, empty states, JSON receipt export.
-- Startup diagnostics (npm run doctor), session-key/deployment checks and a GitHub CI workflow.
-- Request validation and explicit rejection of unavailable Claude mode or browser signing against local EVM addresses.
-- Submission notes and a 90-second demo script.
+| Test area | Result |
+| --- | --- |
+| Automated contract/controller/API/provider suite | PASS: 12 tests, 0 failures after fixes |
+| Production build | PASS: npm run build |
+| Vercel diagnostics | PASS: npm run doctor |
+| HTTP smoke/security checks | PASS: 17 routes/status checks, including private-file/traversal rejection and removed owner API |
+| Real Fuji workflow | PASS: new wallet creation, three paid API calls, drain revert, revoke, revoked-key revert |
+| Receipt checks | PASS: 11 recorded Fuji receipts reverified; fresh run evidence also recorded |
+| Browser filtering/export | PASS: reference filtering, valid JSON download with no privateKey field |
+| Browser wallet fallback | PASS: actionable missing-extension message |
+| Responsive layout | PASS: no horizontal overflow at 390px and 1440px; logo loaded |
+| Browser console | No errors observed during browser checks |
+| Production dependency audit | PASS: 0 reported vulnerabilities |
 
-## Tests
+## Issues fixed
 
-10 automated tests passed with 0 failures: contract security, full API owner lifecycle, mid-run revoke, Claude paid-tool handling, constrained transfer handling, invalid tool inputs, model errors/turn bounds, Fuji switch/add flow, wallet rejection, and persisted quote replay/expiry. Changed isolated agent/provider/quote tests were also rerun successfully after final refinements.
+1. Replacing a lost browser-tab session previously left the old key active. Renewal now revokes the old active session before granting a replacement. A regression test confirms revocation.
+2. Upgraded ethers from 6.15.0 to 6.17.0 to remove the flagged production ethers/ws advisories.
+3. Updated the compiler to solc 0.8.38 and pinned its tmp dependency to 0.2.7.
+4. Contract test fixtures explicitly select an isolated local network, so tests cannot accidentally use a configured Fuji wallet.
 
-A fresh real Fuji mission confirmed three payments, a reverted drain (RecipientNotAllowed), owner revocation, revoked-key reverts (SessionInactive), and restoration. Public evidence: deployment/demo-ready.json.
+## Covered security cases
 
-Receipt import and JSON export were tested against a real confirmed owner transaction; evidence: deployment/export-check.json.
+Recipient allowlist; per-call and rolling caps; expiry; nonce replay; signature tampering; chain/contract domain separation; old-signature invalidation after policy renewal; non-owner rejection; failed-transfer rollback of nonce/spend; matching Paid and Transfer events; wrong amount/token/wallet/recipient rejection; reverted receipts; quote tampering/expiry; idempotent paid-quote redemption; malformed requests; RPC outage handling; browser provider rejection and network addition.
 
-Browser QA confirmed instant blocked-attempt filtering and export controls; no console errors observed. The header network badge remains removed and the footer reads Built for Avalanche.
+## Remaining dependency advisory scope
 
-## Ready state
+The full development dependency audit flags 7 packages (1 critical, 5 high, 1 moderate), all in the Ganache development/test dependency tree: @trufflesuite/uws-js-unofficial, bn.js, elliptic, ganache, lodash, secp256k1, ws. They are not imported by or deployed with the Vercel API runtime. This report does not claim the full development dependency tree is advisory-free.
 
-Wallet: 0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6
+## Evidence and limits
 
-Balance 10.0 jUSD; allowance 5.0 jUSD; active session. Total rolling cap 22.0 jUSD includes 17.0 jUSD of earlier spend, preserved by design.
+Fresh Fuji controller smoke wallet: 0x7e434b072964f6ecc491B12943E0581B57F8aFd9. See deployment/vercel-fuji-verification.json for transaction hashes. The exact controller used on the website was exercised using a local disposable test signer; actual MetaMask/Core permission and signing dialogs were not automated.
 
-## User-dependent setup
+GitHub CI runs the tests and build on Ubuntu; current status is at https://github.com/siddhesh3607/JebKharch/actions/workflows/test.yml.
 
-Live Claude needs ANTHROPIC_API_KEY and CLAUDE_MODEL in the local private .env. The tool loop has controlled-response coverage; an authenticated live call was not made. Actual browser-extension signing needs MetaMask/Core in Chrome/Edge; provider behavior was tested with simulated responses and the local Fuji owner was used for chain transactions. CI is configured but has not been executed by a remote GitHub runner.
-
-This is a functional testnet prototype with demo jUSD, custom HTTP 402 and a single-process quote journal. It is not independently audited custody software.
+No Vercel deployment URL was found in this repository's deployment records. The production build and Vercel-style handlers were tested locally; actual hosted Vercel behavior still needs a deployed URL. External RPC availability and test AVAX remain necessary. This is functional/security regression testing, not an independent smart-contract audit.
