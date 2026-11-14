@@ -1,4 +1,4 @@
-# Demo script — hosted Vercel version
+# Demo script — instant demo and live Fuji
 
 1. Show the reference wallet and existing verified receipt links. Explain that this view has no server-held signing key.
 2. Connect your funded Fuji browser wallet and Create My Demo Wallet. Confirm the token deployment, wallet deployment, token funding, session gas funding and policy grant.
@@ -12,4 +12,4 @@ All prices are mock vendor data, all demo transfers are testnet jUSD, and the ha
 
 
 ## Instant demo
-The homepage defaults to a browser simulation: 10 jUSD, three paid calls, a blocked poisoned drain, kill switch, policy editing and reset. All events are labelled SIMULATED and have no explorer receipts. Select Live Fuji for real testnet contracts and wallet signing. Vercel configuration is unchanged; no AI service is required.
+The homepage defaults to a browser simulation: 10 jUSD, three paid calls, a blocked poisoned drain, kill switch, policy editing and reset. All events are labelled SIMULATED and have no explorer receipts. Select Live Fuji for real testnet contracts and wallet signing. Deployment configuration is unchanged; no AI service is required.

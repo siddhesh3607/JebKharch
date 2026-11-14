@@ -1,4 +1,4 @@
-# Full test report — Vercel edition
+# JebKharch — Full test report
 
 Checked 14/11/2026, 11:33:08 pm IST.
 
@@ -8,7 +8,7 @@ Checked 14/11/2026, 11:33:08 pm IST.
 | --- | --- |
 | Automated contract/controller/API/provider suite | PASS: 12 tests, 0 failures after fixes |
 | Production build | PASS: npm run build |
-| Vercel diagnostics | PASS: npm run doctor |
+| Deployment diagnostics | PASS: npm run doctor |
 | HTTP smoke/security checks | PASS: 17 routes/status checks, including private-file/traversal rejection and removed owner API |
 | Real Fuji workflow | PASS: new wallet creation, three paid API calls, drain revert, revoke, revoked-key revert |
 | Receipt checks | PASS: 11 recorded Fuji receipts reverified; fresh run evidence also recorded |
@@ -31,12 +31,12 @@ Recipient allowlist; per-call and rolling caps; expiry; nonce replay; signature 
 
 ## Remaining dependency advisory scope
 
-The full development dependency audit flags 7 packages (1 critical, 5 high, 1 moderate), all in the Ganache development/test dependency tree: @trufflesuite/uws-js-unofficial, bn.js, elliptic, ganache, lodash, secp256k1, ws. They are not imported by or deployed with the Vercel API runtime. This report does not claim the full development dependency tree is advisory-free.
+The full development dependency audit flags 7 packages (1 critical, 5 high, 1 moderate), all in the Ganache development/test dependency tree: @trufflesuite/uws-js-unofficial, bn.js, elliptic, ganache, lodash, secp256k1, ws. They are not imported by or deployed with the serverless API runtime. This report does not claim the full development dependency tree is advisory-free.
 
 ## Evidence and limits
 
-Fresh Fuji controller smoke wallet: 0x7e434b072964f6ecc491B12943E0581B57F8aFd9. See deployment/vercel-fuji-verification.json for transaction hashes. The exact controller used on the website was exercised using a local disposable test signer; actual MetaMask/Core permission and signing dialogs were not automated.
+Fresh Fuji controller smoke wallet: 0x7e434b072964f6ecc491B12943E0581B57F8aFd9. See deployment/browser-fuji-verification.json for transaction hashes. The exact controller used on the website was exercised using a local disposable test signer; actual MetaMask/Core permission and signing dialogs were not automated.
 
 GitHub CI runs the tests and build on Ubuntu; current status is at https://github.com/siddhesh3607/JebKharch/actions/workflows/test.yml.
 
-No Vercel deployment URL was found in this repository's deployment records. The production build and Vercel-style handlers were tested locally; actual hosted Vercel behavior still needs a deployed URL. External RPC availability and test AVAX remain necessary. This is functional/security regression testing, not an independent smart-contract audit.
+No hosted deployment URL was found in this repository's deployment records. The production build and serverless handlers were tested locally; actual hosted behavior still needs a deployed URL. External RPC availability and test AVAX remain necessary. This is functional/security regression testing, not an independent smart-contract audit.

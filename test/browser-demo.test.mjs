@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {ethers} from 'ethers';import ganache from 'ganache';
 import {BrowserDemo} from '../public/demo-core.js';import {compile} from '../scripts/compile.mjs';import {makeVendorHandler} from '../api/vendor.js';import {VENDORS} from '../lib/payment-protocol.mjs';
-test('Vercel browser workflow deploys owned contracts, buys paid data, blocks drain, revokes and renews', {timeout:120000},async()=>{
+test('Browser wallet workflow deploys owned contracts, buys paid data, blocks drain, revokes and renews', {timeout:120000},async()=>{
  const rpc=ganache.provider({logging:{quiet:true},chain:{chainId:43113,hardfork:'shanghai'},wallet:{totalAccounts:3}});const provider=new ethers.BrowserProvider(rpc,undefined,{cacheTimeout:-1});provider.pollingInterval=20;const keys=Object.values(rpc.getInitialAccounts());const owner=new ethers.NonceManager(new ethers.Wallet(keys[0].secretKey,provider));const events=[];let saved;
  const config={chainId:43113,contracts:compile(),vendors:VENDORS};const demo=new BrowserDemo({ethers,provider,config,meta:{},onSave:m=>saved=m,onEvent:e=>events.push(e)});
  try{await demo.create(owner);let s=await demo.snapshot();assert.equal(s.balance,'10.0');assert.equal(s.remaining,'5.0');assert.equal(saved.wallet,demo.meta.wallet);assert.ok(demo.session);const ownerAddress=await owner.getAddress();assert.notEqual(demo.meta.session,ownerAddress);

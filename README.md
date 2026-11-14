@@ -1,14 +1,14 @@
-# JebKharch — Vercel edition
+# JebKharch — Pocket money for AI agents
 
-Pocket money for agents, enforced by Solidity on Avalanche Fuji. The hosted version is a browser-wallet dApp plus two short, stateless Vercel API endpoints. It has no AI runtime, background worker, server signing key, database or writeable-filesystem dependency.
+Pocket money for agents, enforced by Solidity on Avalanche Fuji. The hosted version is a browser-wallet dApp plus two short, stateless API endpoints. It has no AI runtime, background worker, server signing key, database or writeable-filesystem dependency.
 
-## Deploy on Vercel
+## Deployment
 
 1. Import `siddhesh3607/JebKharch` from GitHub.
 2. Use the repository root as the Root Directory.
 3. Framework Preset: **Other**. Node.js: **22.x**.
 4. Leave settings at their repository defaults: Install `npm ci`, Build `npm run build`, Output `dist`.
-5. **No environment variables are required.** Do not upload the old private `.env` or add owner/session keys to Vercel.
+5. **No environment variables are required.** Do not upload the old private `.env` or add owner/session keys to your hosting environment.
 6. Deploy. Check `/api/health`, then open the homepage.
 
 `vercel.json` supplies these settings. `api/vendor.js` and `api/health.js` are Node serverless functions; the rest of the application is served as static files. Optional `FUJI_RPC_URL` can select a different trusted Fuji RPC, but is not needed for a default deployment.
@@ -47,7 +47,7 @@ Open http://127.0.0.1:3000. Local development serves the same static build and f
 
 `GET /api/vendor?vendor=0&wallet=0x...&session=0x...` returns HTTP 402 with a five-minute quote. The quote's request ID binds the chain, wallet, session, token, vendor, recipient, amount, nonce, expiry and poison setting. The session signs an EIP-712 payment, submits it directly to Fuji, and POSTs `{quote, tx}` to the endpoint. The function checks the matching AgentWallet `Paid` event **and** token `Transfer` event in the successful receipt before serving data.
 
-This is a **custom HTTP 402 flow, not x402 compatibility**. Redeeming an already-paid, unexpired quote is intentionally idempotent: it returns the same price fixture without another charge. This makes the service stateless on Vercel. Transaction nonce/signature replay remains rejected by the wallet contract. A different or tampered quote cannot use the same receipt.
+This is a **custom HTTP 402 flow, not x402 compatibility**. Redeeming an already-paid, unexpired quote is intentionally idempotent: it returns the same price fixture without another charge. This makes the service stateless on the hosting platform. Transaction nonce/signature replay remains rejected by the wallet contract. A different or tampered quote cannot use the same receipt.
 
 The ledger contains this browser's audit rows plus explicitly labeled reference evidence. Blocked rows with hashes point to reverted receipts; failures before submission may have no hash. Export downloads the current browser ledger as JSON. It is not a global blockchain index or censorship-proof rejection log.
 
@@ -55,10 +55,10 @@ The ledger contains this browser's audit rows plus explicitly labeled reference 
 
 - `contracts/`: wallet, policy checks and demo ERC-20
 - `public/`: dashboard, browser wallet/session controller, logo assets
-- `api/`: Vercel vendor and health handlers
+- `api/`: serverless vendor and health handlers
 - `lib/payment-protocol.mjs`: stateless quote/receipt validation
 - `scripts/build.mjs`: static assets, browser ethers and contract artifacts
-- `scripts/dev.mjs`: local adapter for the same Vercel handlers
+- `scripts/dev.mjs`: local adapter for the same serverless handlers
 - `test/`: contract, browser-controller, network-provider and serverless tests
 - `deployment/`: public historical Fuji addresses and receipts
 
