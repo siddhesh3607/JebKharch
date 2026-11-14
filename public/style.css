@@ -4,3 +4,5 @@
 
 .prepare-demo{background:var(--lime);margin-top:10px;font-size:11px}
 .ledger-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.ledger-tools select{width:auto;margin:0;padding:8px;font-size:10px}.export-link{color:var(--lime);font:9px 'Space Mono';text-decoration:none;border-bottom:1px solid;padding:6px 0}.ledger .sectiontitle{flex-wrap:wrap}.ledger-tools .badge{margin-left:auto}@media(max-width:700px){.ledger-tools{width:100%;margin:5px 0 15px}.ledger-tools select{flex:1}}
+
+.app-logo{display:block;flex-shrink:0;border-radius:11px}.brand:hover .app-logo{transform:rotate(-6deg)}

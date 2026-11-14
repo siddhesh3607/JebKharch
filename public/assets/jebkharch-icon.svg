@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">JebKharch app icon</title>
+  <desc id="desc">An acid-lime robot pocket with an upward payment arrow on electric purple.</desc>
+  <rect width="512" height="512" rx="112" fill="#7044FF"/>
+  <path d="M137 165h223c13 0 23 10 23 23v160c0 24-20 44-44 44H168c-24 0-44-20-44-44V188c0-13 4-23 13-23Z" fill="#18171C"/>
+  <path d="M146 143h207c13 0 23 10 23 23v151c0 39-32 71-71 71H199c-39 0-71-32-71-71V166c0-13 5-23 18-23Z" fill="#DCFA52" stroke="#18171C" stroke-width="13" stroke-linejoin="round"/>
+  <path d="M149 183h153" stroke="#18171C" stroke-width="13" stroke-linecap="round"/>
+  <rect x="179" y="232" width="29" height="43" rx="9" fill="#18171C"/>
+  <rect x="265" y="232" width="29" height="43" rx="9" fill="#18171C"/>
+  <path d="M212 315h49" stroke="#18171C" stroke-width="13" stroke-linecap="round"/>
+  <path d="m322 172 68-68m-54 0h54v54" stroke="#18171C" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m322 172 68-68m-54 0h54v54" stroke="#F3F0E7" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M85 313h11m-5-6v12" stroke="#F3F0E7" stroke-width="6" stroke-linecap="round"/>
+</svg>
