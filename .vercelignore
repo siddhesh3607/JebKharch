@@ -1,0 +1,11 @@
+.git
+.env
+.env.*
+runtime
+data
+node_modules
+artifacts
+test
+outputs
+*.log
+*.cmd

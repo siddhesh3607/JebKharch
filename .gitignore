@@ -5,3 +5,9 @@ artifacts/
 *.log
 
 runtime/
+
+dist/
+.vercel/
+
+.env.*
+!.env.example

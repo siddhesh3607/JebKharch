@@ -1,16 +1,16 @@
-# Key-free AI completion report
+# Vercel migration validation
 
-Tested 14/11/2026, 10:35:09 pm IST.
+Checked 14/11/2026, 11:11:36 pm IST.
 
-- Installed a CPU-only llama.cpp server and the official Qwen2.5-0.5B-Instruct Q4_K_M model inside runtime/. Download sources and SHA-256 hashes are recorded in runtime/sources.json.
-- Local API confirmed running at 127.0.0.1:8087. No hosted model key, account or subscription.
-- All 12 automated tests passed, including local AI fact isolation and withholding an invalid model explanation.
-- Real Fuji local-AI workflow confirmed three paid calls and a genuine, fact-checked local-model recommendation.
-- Recommendation: The winning vendor for wireless headphones is Bazaar Insights, with an INR 2499 price. This is the cheapest option and saves INR 200.
-- Public transaction evidence: deployment/local-ai-verification.json.
-- Browser checked: local mode is enabled and selected; live model result appears in the banner and ledger; no console errors observed.
-- Restored: 10.0 jUSD balance; 5.0 jUSD allowance; active session.
+- npm run build: PASS. Static dist output, browser ethers and contract bytecode are generated with no runtime model or signing secrets.
+- npm test: PASS, 7 tests, 0 failures. Contract policy security, complete browser-controller lifecycle, wallet-provider switching/rejection, stateless vendor receipt/tamper/expiry/idempotency, and health handler.
+- npm run doctor: PASS. Node 22 and Vercel build/output settings are consistent.
+- Real Fuji verification: new owned demo wallet 0x937AAC76a3f0b254fdABC852fC09c7882469cca1; three paid vendor responses, RecipientNotAllowed drain revert, owner revoke, SessionInactive payment revert. All submitted receipt statuses were independently checked. Evidence: deployment/vercel-fuji-verification.json.
+- Local Vercel-style HTTP checks: homepage, config.json, browser ethers, logo, manifest and health endpoint returned HTTP 200.
+- Browser QA: reference state loaded, six verified proof rows visible, new onboarding present, local AI and server-owner modes absent, logo loaded, no console errors observed.
 
-The paid workflow is orchestrated by code; its price comparison is deterministic and the model writes the grounded explanation. This mode does not give the model arbitrary payment tools or follow poisoned instructions. Use Attack harness for the deliberate drain-attempt demonstration. Live Claude remains optional, not required.
+## Deployment boundaries
 
-The full Windows x64 project bundle includes model/runtime assets. Node.js is required and npm dependencies install on first launch. The original Desktop checkout is configured for Fuji. The download excludes private keys and runs a local chain by default.
+The serverless endpoints and exact browser transaction controller were exercised against Fuji using a local disposable test signer. Actual MetaMask/Core consent UI was not automated. Vercel account deployment has not been performed; import the public repository and use the included vercel.json defaults. External RPC uptime, wallet extension availability and Fuji test AVAX are required for live use. No environment variables are mandatory and no private keys belong on Vercel.
+
+The current source and build exclude the local model and its code. An ignored legacy runtime directory may remain in the developer checkout; it is excluded by Git and .vercelignore and is never loaded.
