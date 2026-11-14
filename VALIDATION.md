@@ -1,35 +1,16 @@
-# Completion and validation report
+# Key-free AI completion report
 
-Verified 14/11/2026, 1:47:46 am IST.
+Tested 14/11/2026, 10:35:09 pm IST.
 
-## Finished in this pass
+- Installed a CPU-only llama.cpp server and the official Qwen2.5-0.5B-Instruct Q4_K_M model inside runtime/. Download sources and SHA-256 hashes are recorded in runtime/sources.json.
+- Local API confirmed running at 127.0.0.1:8087. No hosted model key, account or subscription.
+- All 12 automated tests passed, including local AI fact isolation and withholding an invalid model explanation.
+- Real Fuji local-AI workflow confirmed three paid calls and a genuine, fact-checked local-model recommendation.
+- Recommendation: The winning vendor for wireless headphones is Bazaar Insights, with an INR 2499 price. This is the cheapest option and saves INR 200.
+- Public transaction evidence: deployment/local-ai-verification.json.
+- Browser checked: local mode is enabled and selected; live model result appears in the banner and ledger; no console errors observed.
+- Restored: 10.0 jUSD balance; 5.0 jUSD allowance; active session.
 
-- Restart-safe, wallet-scoped HTTP 402 quote journal with one-use redemption, TTL and capacity limit.
-- Extracted Claude runner with input validation, bounded turns, request timeout, error tool results and controlled-response tests.
-- Verified external owner transaction import with duplicate suppression.
-- Instant ledger filters, empty states, JSON receipt export.
-- Startup diagnostics (npm run doctor), session-key/deployment checks and a GitHub CI workflow.
-- Request validation and explicit rejection of unavailable Claude mode or browser signing against local EVM addresses.
-- Submission notes and a 90-second demo script.
+The paid workflow is orchestrated by code; its price comparison is deterministic and the model writes the grounded explanation. This mode does not give the model arbitrary payment tools or follow poisoned instructions. Use Attack harness for the deliberate drain-attempt demonstration. Live Claude remains optional, not required.
 
-## Tests
-
-10 automated tests passed with 0 failures: contract security, full API owner lifecycle, mid-run revoke, Claude paid-tool handling, constrained transfer handling, invalid tool inputs, model errors/turn bounds, Fuji switch/add flow, wallet rejection, and persisted quote replay/expiry. Changed isolated agent/provider/quote tests were also rerun successfully after final refinements.
-
-A fresh real Fuji mission confirmed three payments, a reverted drain (RecipientNotAllowed), owner revocation, revoked-key reverts (SessionInactive), and restoration. Public evidence: deployment/demo-ready.json.
-
-Receipt import and JSON export were tested against a real confirmed owner transaction; evidence: deployment/export-check.json.
-
-Browser QA confirmed instant blocked-attempt filtering and export controls; no console errors observed. The header network badge remains removed and the footer reads Built for Avalanche.
-
-## Ready state
-
-Wallet: 0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6
-
-Balance 10.0 jUSD; allowance 5.0 jUSD; active session. Total rolling cap 22.0 jUSD includes 17.0 jUSD of earlier spend, preserved by design.
-
-## User-dependent setup
-
-Live Claude needs ANTHROPIC_API_KEY and CLAUDE_MODEL in the local private .env. The tool loop has controlled-response coverage; an authenticated live call was not made. Actual browser-extension signing needs MetaMask/Core in Chrome/Edge; provider behavior was tested with simulated responses and the local Fuji owner was used for chain transactions. CI is configured but has not been executed by a remote GitHub runner.
-
-This is a functional testnet prototype with demo jUSD, custom HTTP 402 and a single-process quote journal. It is not independently audited custody software.
+The full Windows x64 project bundle includes model/runtime assets. Node.js is required and npm dependencies install on first launch. The original Desktop checkout is configured for Fuji. The download excludes private keys and runs a local chain by default.

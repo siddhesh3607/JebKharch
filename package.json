@@ -10,7 +10,8 @@
     "deploy:fuji": "node scripts/deploy.mjs",
     "demo:local": "node scripts/local.mjs",
     "doctor": "node scripts/doctor.mjs",
-    "demo:verify": "node scripts/demo-smoke.mjs"
+    "demo:verify": "node scripts/demo-smoke.mjs",
+    "setup:ai": "node scripts/setup-local-ai.mjs"
   },
   "dependencies": {
     "ethers": "6.15.0",

@@ -1,5 +1,9 @@
 # JebKharch — pocket money for AI agents
 
+**Free local AI is installed and tested. No AI API key is needed.** Open http://127.0.0.1:3000 and select **Local AI / ready - no API key**. See `FREE-AI.md` for portable setup and the model's role.
+
+The full project ZIP includes the CPU runtime and model under `runtime/`. Start with `Start-JebKharch.cmd`. The original Desktop checkout uses Fuji; an extracted download without private `.env` uses a fresh local blockchain. Local inference and the local-chain demo need no paid account.
+
 A working Avalanche Fuji prototype: Solidity session wallet, paid HTTP APIs, deterministic attack harness, optional live Claude agent, and an owner dashboard.
 
 ## Run
