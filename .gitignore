@@ -4,11 +4,6 @@ data/
 artifacts/
 *.log
 
-runtime/
-
 dist/
-.vercel/
-
-.env.*
-!.env.example
+runtime/
 work/

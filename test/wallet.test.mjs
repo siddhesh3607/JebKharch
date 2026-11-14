@@ -1,6 +1,6 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {ethers} from 'ethers';import {connect,signedPayment} from '../lib/chain.mjs';
 test('wallet enforces policies, signed intent, rolling spend, and revocation',async()=>{
- const c=await connect({network:'local'});const id=()=>ethers.hexlify(ethers.randomBytes(32));const args=await signedPayment(c,c.vendors[0],1000000n,id());
+ const c=await connect();const id=()=>ethers.hexlify(ethers.randomBytes(32));const args=await signedPayment(c,c.vendors[0],1000000n,id());
  await(await c.wallet.execute(...args)).wait();assert.equal(await c.wallet.spent24h(c.session.address),1000000n);
  await assert.rejects(c.wallet.execute.staticCall(...args),/InvalidNonce/);
  const check=async(recipient,amount,reason)=>{const a=await signedPayment(c,recipient,amount,id());await assert.rejects(c.wallet.execute.staticCall(...a),new RegExp(reason));};

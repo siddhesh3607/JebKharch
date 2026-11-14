@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-13T20:16:58.816Z",
+  "wallet": "0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6",
+  "recordedTx": "0xca2ce379a906439587f296784438672fcd0c62462f22bb9f46c606661c50aa40",
+  "exportedRecords": 73,
+  "health": {
+    "ok": true,
+    "network": "Fuji",
+    "chainId": 43113,
+    "block": 61021750,
+    "wallet": "0xa8Aa77610fc6bDD3864BDBB168001F3D9286EAe6",
+    "session": "0x239f5aEf963110c99052c27b5c3b0b56e03bf435",
+    "sessionActive": true,
+    "localOwnerAvailable": true,
+    "claudeAvailable": false
+  }
+}

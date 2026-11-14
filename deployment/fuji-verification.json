@@ -45,5 +45,5 @@
   "renewalTx": "0xca2ce379a906439587f296784438672fcd0c62462f22bb9f46c606661c50aa40",
   "finalBalance": "7 jUSD",
   "remaining24h": "2 jUSD",
-  "note": "Session renewed for use; renewal preserves rolling spend. Demo uses deterministic harness and custom HTTP 402, not official USDC."
+  "note": "Session renewed for use; renewal preserves rolling spend. Demo uses deterministic harness and custom HTTP 402, not live Claude or official USDC."
 }
