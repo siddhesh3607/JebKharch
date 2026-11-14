@@ -9,3 +9,7 @@
 7. Export receipts. Use Prepare Next Demo to restore a ready session for the next run.
 
 All prices are mock vendor data, all demo transfers are testnet jUSD, and the harness is deterministic. There is no LLM in the hosted version. The tab keeps the limited session key; the owner key stays in the wallet extension.
+
+
+## Instant demo
+The homepage defaults to a browser simulation: 10 jUSD, three paid calls, a blocked poisoned drain, kill switch, policy editing and reset. All events are labelled SIMULATED and have no explorer receipts. Select Live Fuji for real testnet contracts and wallet signing. Vercel configuration is unchanged; no AI service is required.

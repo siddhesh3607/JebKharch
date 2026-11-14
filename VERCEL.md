@@ -24,3 +24,7 @@ After deployment:
 If Vercel already has an older imported project, reset any old Build/Output overrides to the values above and redeploy the latest main commit. Do not set a persistent server Start Command. If a browser has no wallet extension, use Chrome/Edge with MetaMask or Core; the reference evidence remains viewable without an extension.
 
 Network, wallet confirmation, test AVAX availability and external RPC uptime are runtime dependencies. This repository eliminates the previous local-model and persistent-server deployment requirements; it cannot guarantee availability of external services.
+
+
+## Instant demo
+The homepage defaults to a browser simulation: 10 jUSD, three paid calls, a blocked poisoned drain, kill switch, policy editing and reset. All events are labelled SIMULATED and have no explorer receipts. Select Live Fuji for real testnet contracts and wallet signing. Vercel configuration is unchanged; no AI service is required.

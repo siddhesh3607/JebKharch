@@ -9,3 +9,7 @@ Built: wallet contract, rolling budget and replay protection, browser-owned setu
 Deployment: import this repository into Vercel. No AI service, local process, database or private signing environment variable is required. Live users need a browser wallet and Fuji test AVAX. Source and deployment settings are documented in README.md and VERCEL.md.
 
 Boundaries: deterministic harness, custom HTTP 402 rather than x402 compliance, demo jUSD rather than official USDC, browser-local audit history, and no independent contract audit.
+
+
+## Instant demo
+The homepage defaults to a browser simulation: 10 jUSD, three paid calls, a blocked poisoned drain, kill switch, policy editing and reset. All events are labelled SIMULATED and have no explorer receipts. Select Live Fuji for real testnet contracts and wallet signing. Vercel configuration is unchanged; no AI service is required.

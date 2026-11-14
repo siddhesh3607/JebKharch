@@ -15,7 +15,9 @@ Pocket money for agents, enforced by Solidity on Avalanche Fuji. The hosted vers
 
 ## Use the hosted demo
 
-The initial view shows the original deployed wallet and historical verified Fuji receipts. It is a reference, not a shared signing account. Viewing these receipts requires no wallet or API key.
+The initial view is **Instant Demo**, a clearly marked browser simulation. It starts with 10 simulated jUSD, a 1-per-call limit and 5-per-day allowance. Launch the poisoned mission: three purchases leave 7 jUSD and 2 of allowance, and the drain is blocked. Try the kill switch, edit the policy, prepare another run, or reset. No wallet, local AI, RPC or API key is used in this mode; it creates no transaction hashes.
+
+Select **Live Fuji** to view the original deployed wallet and verified historical receipts, or create your own instance for actual testnet transactions.
 
 To make live payments:
 
